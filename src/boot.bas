@@ -1,0 +1,4 @@
+ 1 REM Sergei Morozov, 2019
+ 2 REM github:morozov/pacmania
+ 3 REM __LOADER__
+10 CLEAR 24575 : RANDOMIZE USR (PEEK 23635+256*PEEK 23636+60)

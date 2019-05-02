@@ -1,0 +1,72 @@
+; Loading screen
+i$4000
+
+; Loader
+c$5EEC DI            ;
+ $5EED XOR A         ; LD A,0
+ $5EEE OUT ($FE),A   ; BORDER 0
+ $5EF0 LD ($5C6B),A  ; Disable cursor
+ $5EF3 LD SP,$6000   ; Move stack out of the data range
+ $5EF6 LD HL,$4000   ; {Fill screen with black
+ $5EF9 LD DE,$4001   ;
+ $5EFC LD (HL),L     ;
+ $5EFD LD BC,$1AFF   ;
+ $5F00 LDIR          ; }
+ $5F02 LD DE,$1B00   ; {Load screen data in #8000
+ $5F05 LD IX,$8000   ;
+ $5F09 CALL $5F47    ; }
+ $5F0C LD HL,$8000   ; {Display screen
+ $5F0F LD DE,$4000   ;
+ $5F12 LD BC,$1B00   ;
+ $5F15 LDIR          ; }
+ $5F17 LD DE,$A000   ; {Load game data
+ $5F1A LD IX,$6000   ;
+ $5F1E CALL $5F47    ; }
+ $5F21 LD A,$2F      ;
+ $5F23 LD ($7530),A  ;
+ $5F26 CALL $5F56    ; {Detect if there's 128K
+ $5F29 OR A          ;
+ $5F2A JP Z,$7530    ;
+ $5F2D LD BC,$7FFD   ;
+ $5F30 LD A,$11      ;
+ $5F32 OUT (C),A     ;
+ $5F34 PUSH BC       ;
+ $5F35 LD DE,$1770   ;
+ $5F38 LD IX,$C000   ;
+ $5F3C CALL $5F47    ;
+ $5F3F POP BC        ;
+ $5F40 LD A,$10      ;
+ $5F42 OUT (C),A     ;
+ $5F44 JP $7530      ; }
+*$5F47 PUSH IX       ; {Tape loading routine
+ $5F49 PUSH DE       ;
+ $5F4A LD A,$FF      ;
+ $5F4C SCF           ;
+ $5F4D CALL $0556    ;
+ $5F50 POP DE        ;
+ $5F51 POP IX        ;
+ $5F53 RET C         ;
+ $5F54 JR $5F47      ; }
+*$5F56 LD E,$11      ; {Detects if there's 128K
+ $5F58 LD BC,$7FFD   ;
+ $5F5B LD HL,$C000   ;
+ $5F5E LD A,(HL)     ;
+ $5F5F CPL           ;
+ $5F60 OUT (C),E     ;
+ $5F62 LD D,(HL)     ;
+ $5F63 LD (HL),A     ;
+ $5F64 DEC E         ;
+ $5F65 OUT (C),E     ;
+ $5F67 CP (HL)       ;
+ $5F68 JR Z,$5F74    ;
+ $5F6A INC E         ;
+ $5F6B OUT (C),E     ;
+ $5F6D LD (HL),D     ;
+ $5F6E DEC E         ;
+ $5F6F OUT (C),E     ;
+ $5F71 LD A,$01      ;
+ $5F73 RET           ;
+*$5F74 LD (HL),D     ;
+ $5F75 XOR A         ;
+ $5F76 RET           ; }
+
