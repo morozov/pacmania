@@ -1,9 +1,9 @@
-Pac-Mania.trd: boot.$$B
+Pac-Mania.trd: boot.$$B p.$$C m.$$C
 	createtrd Pac-Mania.trd
 	hobeta2trd boot.\$$B Pac-Mania.trd
 	hobeta2trd hob/screenz.\$$C Pac-Mania.trd
-	hobeta2trd hob/data.\$$C Pac-Mania.trd
-	hobeta2trd hob/music.\$$C Pac-Mania.trd
+	hobeta2trd p.\$$C Pac-Mania.trd
+	hobeta2trd m.\$$C Pac-Mania.trd
 
 Pac-Mania.tzx.zip:
 	wget http://www.worldofspectrum.org/pub/sinclair/games/p/Pac-Mania.tzx.zip
@@ -19,6 +19,15 @@ Pac-Mania-Fixed.tzx: Pac-Mania.tzx
 
 Pac-Mania.tap: Pac-Mania-Fixed.tzx
 	tzx2tap Pac-Mania-Fixed.tzx Pac-Mania.tap
+
+p.000 m.000: Pac-Mania.tap
+	tapto0 Pac-Mania.tap
+
+p.$$C: p.000
+	0tohob p.000
+
+m.$$C: m.000
+	0tohob m.000
 
 loader.bin: src/loader.asm
 	pasmo --bin src/loader.asm loader.bin
