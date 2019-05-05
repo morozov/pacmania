@@ -5,6 +5,21 @@ Pac-Mania.trd: boot.$$B
 	hobeta2trd hob/data.\$$C Pac-Mania.trd
 	hobeta2trd hob/music.\$$C Pac-Mania.trd
 
+Pac-Mania.tzx.zip:
+	wget http://www.worldofspectrum.org/pub/sinclair/games/p/Pac-Mania.tzx.zip
+
+Pac-Mania.tzx: Pac-Mania.tzx.zip
+	unzip -u Pac-Mania.tzx.zip && touch Pac-Mania.tzx
+
+Pac-Mania-Fixed.tzx: Pac-Mania.tzx
+	# Remove the 2A block which doesn't contain relevant data and is not
+	# supported by tzx2tap. Otherwise, we'll lose the music file.
+	# https://www.worldofspectrum.org/TZXformat.html#STOP48K
+	(head -c 48501 Pac-Mania.tzx && tail -c +48507 Pac-Mania.tzx) > Pac-Mania-Fixed.tzx
+
+Pac-Mania.tap: Pac-Mania-Fixed.tzx
+	tzx2tap Pac-Mania-Fixed.tzx Pac-Mania.tap
+
 loader.bin: src/loader.asm
 	pasmo --bin src/loader.asm loader.bin
 
