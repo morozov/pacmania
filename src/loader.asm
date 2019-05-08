@@ -1,15 +1,6 @@
 ; Move stack out of the data range
 LD SP, $6000
 
-; Clear screen
-XOR A
-OUT ($FE),A
-LD HL,$4000
-LD DE,$4001
-LD (HL),L
-LD BC,$1AFF
-LDIR
-
 ; Load the image
 LD DE, ($5CF4)   ; restore the FDD head position
 LD BC, $0F05     ; load 15 sectors of compressed image
