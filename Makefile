@@ -33,7 +33,7 @@ Pac-Mania.tap: Pac-Mania-Fixed.tzx
 	tzx2tap Pac-Mania-Fixed.tzx Pac-Mania.tap
 
 p.000 m.000: Pac-Mania.tap
-	tapto0 Pac-Mania.tap
+	tapto0 -f Pac-Mania.tap
 
 p.$$C: p.000
 	0tohob p.000
