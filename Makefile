@@ -2,20 +2,27 @@ Pac-Mania.scl: Pac-Mania.trd
 	trd2scl Pac-Mania.trd Pac-Mania.scl
 
 Pac-Mania.trd: boot.$$B p.$$C m.$$C
-	createtrd Pac-Mania.trd
-	hobeta2trd boot.\$$B Pac-Mania.trd
-	hobeta2trd hob/screenz.\$$C Pac-Mania.trd
-	hobeta2trd p.\$$C Pac-Mania.trd
-	hobeta2trd m.\$$C Pac-Mania.trd
+	# Create a temporary file first in order to make sure the target file
+	# gets created only after the entire job has succeeded
+	$(eval TMPFILE=$(shell tempfile))
+
+	createtrd $(TMPFILE)
+	hobeta2trd boot.\$$B $(TMPFILE)
+	hobeta2trd hob/screenz.\$$C $(TMPFILE)
+	hobeta2trd p.\$$C $(TMPFILE)
+	hobeta2trd m.\$$C $(TMPFILE)
 
 	# Write the correct length to the first file (offset 13)
 	# The length is 1 (boot) + 15 (loading screen) + 160 (data) + 24 (music) = 200
 	# Got to use the the octal notation since it's the only format of binary data POSIX printf understands
 	# https://pubs.opengroup.org/onlinepubs/9699919799/utilities/printf.html#tag_20_94_13
-	printf '\310' | dd of=Pac-Mania.trd bs=1 seek=13 conv=notrunc status=none
+	printf '\310' | dd of=$(TMPFILE) bs=1 seek=13 conv=notrunc status=none
 
 	# Remove three other files (fill 3×16 bytes starting offset 16 with zeroes)
-	dd if=/dev/zero of=Pac-Mania.trd bs=1 seek=16 count=48 conv=notrunc status=none
+	dd if=/dev/zero of=$(TMPFILE) bs=1 seek=16 count=48 conv=notrunc status=none
+
+	# Rename the temporary file to target name
+	mv $(TMPFILE) Pac-Mania.trd
 
 Pac-Mania.tzx.zip:
 	wget http://www.worldofspectrum.org/pub/sinclair/games/p/Pac-Mania.tzx.zip
